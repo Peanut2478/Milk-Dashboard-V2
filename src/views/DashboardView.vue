@@ -6,7 +6,6 @@ import { supabase } from "../lib/supabase.ts";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth.ts";
 const title = "Milk Dashboard";
-
 const stats = ref([
   {
     title: "Patients",

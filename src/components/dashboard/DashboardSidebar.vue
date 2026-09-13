@@ -13,6 +13,10 @@ const navigationItems = [
     path: "/staff",
   },
   {
+    label: "Departments",
+    path: "/departments",
+  },
+  {
     label: "Appointments",
     path: "/appointments",
   },
