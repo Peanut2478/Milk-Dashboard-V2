@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue";
 import type { Staff } from "../types/staff";
 import { getStaff, deleteStaff } from "../services/staffServices";
-import StaffCard from "../components/staff/staffCard.vue";
+import StaffCard from "../components/staff/StaffCard.vue";
 import EditStaffForm from "../components/staff/EditStaffForm.vue";
 import AddStaffForm from "../components/staff/AddStaffForm.vue";
 const staff = ref<Staff[]>([]);
