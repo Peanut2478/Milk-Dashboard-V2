@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import type { Staff } from "../types/staff";
 import { getStaff, deleteStaff } from "../services/staffServices";
 import StaffCard from "../components/staff/StaffCard.vue";
@@ -40,7 +40,6 @@ async function handleDelete(member: Staff) {
 async function loadStaff() {
   loading.value = true;
   errorMessage.value = "";
-
   try {
     staff.value = await getStaff();
   } catch (error) {
@@ -53,7 +52,21 @@ async function loadStaff() {
     loading.value = false;
   }
 }
-
+const searchTerm = ref("");
+const selectedRole = ref("");
+const filteredStaff = computed(() => {
+  const search = searchTerm.value.trim().toLowerCase();
+  return staff.value.filter((member) => {
+    const fullName = `${member.first_name} ${member.last_name}`.toLowerCase();
+    const matchesSearch =
+      !search ||
+      fullName.includes(search) ||
+      member.email.toLowerCase().includes(search);
+    const matchesRole =
+      !selectedRole.value || member.role === selectedRole.value;
+    return matchesSearch && matchesRole;
+  });
+});
 onMounted(() => {
   loadStaff();
 });
@@ -62,6 +75,19 @@ onMounted(() => {
 <template>
   <section>
     <h1>Staff</h1>
+    <input v-model="searchTerm" type="text" placeholder="Search staff..." />
+
+    <select v-model="selectedRole">
+      <option value="">All Roles</option>
+      <option value="Admin">Admin</option>
+      <option value="Doctor">Doctor</option>
+      <option value="Nurse">Nurse</option>
+      <option value="Reception">Reception</option>
+      <option value="Billing">Billing</option>
+      <option value="Pharmacist">Pharmacist</option>
+      <option value="Supply Manager">Supply Manager</option>
+      <option value="Technician">Technician</option>
+    </select>
     <EditStaffForm
       v-if="selectedStaff"
       :member="selectedStaff"
@@ -79,7 +105,7 @@ onMounted(() => {
 
     <div v-else class="staff-list">
       <StaffCard
-        v-for="member in staff"
+        v-for="member in filteredStaff"
         :key="member.id"
         :member="member"
         @edit="editStaff"

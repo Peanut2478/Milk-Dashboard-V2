@@ -54,6 +54,22 @@ const lowStockCount = computed(() => {
     return supply.quantity <= supply.reorder_level;
   }).length;
 });
+const searchTerm = ref("");
+const stockFilter = ref("");
+
+const filteredSupplies = computed(() => {
+  const search = searchTerm.value.trim().toLowerCase();
+  return supplies.value.filter((supply) => {
+    const matchesSearch = !search || supply.name.toLowerCase().includes(search);
+    const isLowStock =
+      supply.reorder_level !== null && supply.quantity <= supply.reorder_level;
+    const matchesStock =
+      !stockFilter.value ||
+      (stockFilter.value === "low" && isLowStock) ||
+      (stockFilter.value === "normal" && !isLowStock);
+    return matchesSearch && matchesStock;
+  });
+});
 onMounted(() => {
   loadSupplies();
 });
@@ -61,6 +77,27 @@ onMounted(() => {
 <template>
   <section>
     <h1>Supplies</h1>
+    <div class="supply-filters">
+      <input
+        v-model="searchTerm"
+        type="text"
+        placeholder="Search supplies..."
+      />
+      <select v-model="stockFilter">
+        <option value="">All Stock</option>
+        <option value="low">Low Stock</option>
+        <option value="normal">In Stock</option>
+      </select>
+      <button
+        type="button"
+        @click="
+          searchTerm = '';
+          stockFilter = '';
+        "
+      >
+        Clear Filters
+      </button>
+    </div>
     <AddSupplyForm @supply-added="loadSupplies" />
     <EditSupplyForm
       v-if="selectedSupply"
@@ -76,7 +113,7 @@ onMounted(() => {
     </p>
     <p v-else-if="supplies.length === 0">No supplies found.</p>
     <div v-else>
-      <article v-for="supply in supplies" :key="supply.supply_id">
+      <article v-for="supply in filteredSupplies" :key="supply.supply_id">
         <h3>{{ supply.name }}</h3>
         <p>Quantity: {{ supply.quantity }}</p>
         <p>

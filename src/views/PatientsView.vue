@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import type { Patient } from "../types/patient";
 import { getPatients, deletePatient } from "../services/patientServices";
 import AddPatientForm from "../components/patients/AddPatientForm.vue";
@@ -51,6 +51,24 @@ async function handleDelete(patient: Patient) {
     }
   }
 }
+
+const searchTerm = ref("");
+const filteredPatients = computed(() => {
+  const search = searchTerm.value.trim().toLowerCase();
+  if (!search) {
+    return patients.value;
+  }
+  return patients.value.filter((patient) => {
+    const fullName = `${patient.first_name} ${patient.last_name}`.toLowerCase();
+    const email = patient.email?.toLowerCase() ?? "";
+    const phone = patient.phone?.toLowerCase() ?? "";
+    return (
+      fullName.includes(search) ||
+      email.includes(search) ||
+      phone.includes(search)
+    );
+  });
+});
 onMounted(() => {
   loadPatients();
 });
@@ -66,6 +84,13 @@ onMounted(() => {
       @patient-updated="handlePatientUpdate"
       @cancel="selectedPatient = null"
     />
+    <div class="search-bar">
+      <input
+        v-model="searchTerm"
+        type="text"
+        placeholder="Search patients..."
+      />
+    </div>
     <p v-if="loading">Loading patients...</p>
 
     <p v-else-if="errorMessage">
@@ -73,10 +98,13 @@ onMounted(() => {
     </p>
 
     <p v-else-if="patients.length === 0">No patients found.</p>
+    <p v-if="!loading && patients.length > 0 && filteredPatients.length === 0">
+      No patients match your search.
+    </p>
 
     <div v-else class="patient-list">
       <PatientCard
-        v-for="patient in patients"
+        v-for="patient in filteredPatients"
         :key="patient.id"
         :patient="patient"
         @edit="editPatient"
