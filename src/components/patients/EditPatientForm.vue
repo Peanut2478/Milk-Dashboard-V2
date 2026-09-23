@@ -1,6 +1,11 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue";
-
+import { reactive, ref, onMounted } from "vue";
+import type { Insurance } from "../../types/insurance";
+import {
+  getInsuranceByPatient,
+  createInsurance,
+  updateInsurance,
+} from "../../services/insuranceService";
 import type { Patient } from "../../types/patient";
 import { updatePatient } from "../../services/patientServices";
 const props = defineProps<{
@@ -11,6 +16,14 @@ const emit = defineEmits<{
   patientUpdated: [];
   cancel: [];
 }>();
+const existingInsurance = ref<Insurance | null>(null);
+
+const insuranceProvider = ref("");
+const policyNumber = ref("");
+const groupNumber = ref("");
+const coverageStart = ref("");
+const coverageEnd = ref("");
+const insuranceStatus = ref("Active");
 
 const form = reactive({
   first_name: props.patient.first_name,
@@ -23,7 +36,23 @@ const form = reactive({
   address: props.patient.address ?? "",
   emergency_contact: props.patient.emergency_contact ?? "",
 });
+async function loadInsurance() {
+  try {
+    const records = await getInsuranceByPatient(props.patient.id);
 
+    if (records.length > 0) {
+      existingInsurance.value = records[0];
+      insuranceProvider.value = records[0].provider_name;
+      policyNumber.value = records[0].policy_number;
+      groupNumber.value = records[0].group_number;
+      coverageStart.value = records[0].coverage_start ?? "";
+      coverageEnd.value = records[0].coverage_end ?? "";
+      insuranceStatus.value = records[0].status;
+    }
+  } catch (error) {
+    console.error("Failed to load insurance:", error);
+  }
+}
 const submitting = ref(false);
 const errorMessage = ref("");
 
@@ -43,7 +72,25 @@ async function handleSubmit() {
       address: form.address || null,
       emergency_contact: form.emergency_contact || null,
     });
-
+    if (insuranceProvider.value && policyNumber.value && groupNumber.value) {
+      const insuranceData = {
+        patient_id: props.patient.id,
+        provider_name: insuranceProvider.value,
+        policy_number: policyNumber.value,
+        group_number: groupNumber.value,
+        coverage_start: coverageStart.value || null,
+        coverage_end: coverageEnd.value || null,
+        status: insuranceStatus.value,
+      };
+      if (existingInsurance.value) {
+        await updateInsurance(
+          existingInsurance.value.insurance_id,
+          insuranceData,
+        );
+      } else {
+        await createInsurance(insuranceData);
+      }
+    }
     emit("patientUpdated");
   } catch (error) {
     if (error instanceof Error) {
@@ -55,6 +102,9 @@ async function handleSubmit() {
     submitting.value = false;
   }
 }
+onMounted(() => {
+  loadInsurance();
+});
 </script>
 <template>
   <form @submit.prevent="handleSubmit">
@@ -138,11 +188,40 @@ async function handleSubmit() {
         type="text"
       />
     </div>
+    <h3>Insurance</h3>
+    <div>
+      <label>Provider</label>
+      <input v-model="insuranceProvider" placeholder="Blue Cross Blue Shield" />
+    </div>
+    <div>
+      <label>Policy Number</label>
+      <input v-model="policyNumber" />
+    </div>
+    <div>
+      <label>Group Number</label>
+      <input v-model="groupNumber" />
+    </div>
 
+    <div>
+      <label>Coverage Start</label>
+      <input v-model="coverageStart" type="date" />
+    </div>
+
+    <div>
+      <label>Coverage End</label>
+      <input v-model="coverageEnd" type="date" />
+    </div>
+    <div>
+      <label>Insurance Status</label>
+      <select v-model="insuranceStatus">
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+        <option value="Expired">Expired</option>
+      </select>
+    </div>
     <p v-if="errorMessage">
       {{ errorMessage }}
     </p>
-
     <button type="submit" :disabled="submitting">
       {{ submitting ? "Saving..." : "Save Changes" }}
     </button>

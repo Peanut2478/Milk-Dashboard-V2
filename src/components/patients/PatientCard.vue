@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Patient } from "../../types/patient";
-
+import PatientInsurance from "./PatientInsurance.vue";
 defineProps<{
   patient: Patient;
 }>();
@@ -24,6 +24,7 @@ const emit = defineEmits<{
       <button @click="emit('edit', patient)">Edit</button>
       <button @click="emit('delete', patient)">Delete</button>
     </div>
+    <PatientInsurance :patient-id="patient.id" />
   </article>
 </template>
 

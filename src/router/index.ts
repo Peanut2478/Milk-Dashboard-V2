@@ -74,6 +74,18 @@ const router = createRouter({
           path: "payroll",
           component: () => import("../views/PayrollView.vue"),
         },
+        {
+          path: "admissions",
+          component: () => import("../views/AdmissionsView.vue"),
+        },
+        {
+          path: "medications",
+          component: () => import("../views/MedicationsView.vue"),
+        },
+        {
+          path: "prescription",
+          component: () => import("../views/PerscriptionsView.vue"),
+        },
       ],
     },
   ],

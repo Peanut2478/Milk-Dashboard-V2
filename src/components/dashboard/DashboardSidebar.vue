@@ -36,6 +36,9 @@ const navigationItems = [
     label: "Payroll",
     path: "/payroll",
   },
+  { label: "Admissions", path: "/admissions" },
+  { label: "Medications", path: "/medications" },
+  { label: "Prescriptions", path: "/prescription" },
 ];
 </script>
 
