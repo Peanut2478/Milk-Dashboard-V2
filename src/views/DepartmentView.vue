@@ -95,3 +95,15 @@ onMounted(() => {
     </div>
   </section>
 </template>
+<style scoped>
+input,
+select,
+textarea {
+  color: #1f2937;
+  background-color: white;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
+}
+</style>

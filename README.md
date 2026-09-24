@@ -1,4 +1,4 @@
-# Hospital Administration Dashboard
+# Milk Administration
 
 A full-stack hospital administration dashboard built with Vue 3, TypeScript, Supabase, and PostgreSQL.
 
@@ -19,6 +19,12 @@ The application provides a centralized interface for managing hospital operation
 - Dashboard statistics and charts
 - Search and filtering across major sections
 - Responsive administrative interface
+- Patient insurance management
+- Hospital admissions and discharge tracking
+- Medication inventory management
+- Prescription management
+- Supply usage tracking with automatic inventory updates
+- Payment processing with automatic billing balance updates
 
 ## Tech Stack
 

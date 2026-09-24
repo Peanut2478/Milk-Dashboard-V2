@@ -15,17 +15,28 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 const props = defineProps<{
   rooms: Room[];
 }>();
+const roomColors: Record<string, string> = {
+  Available: "#22c55e",
+  Occupied: "#ef4444",
+  Cleaning: "#f59e0b",
+  Maintenance: "#9ca3af",
+  Reserved: "#3b82f6",
+};
 const chartData = computed(() => {
   const counts: Record<string, number> = {};
   props.rooms.forEach((room) => {
-    counts[room.status] = (counts[room.status] ?? 0) + 1;
+    counts[room.status] = (counts[room.status] || 0) + 1;
   });
+  const labels = Object.keys(counts);
   return {
-    labels: Object.keys(counts),
+    labels,
     datasets: [
       {
         label: "Rooms",
-        data: Object.values(counts),
+        data: labels.map((status) => counts[status]),
+        backgroundColor: labels.map(
+          (status) => roomColors[status] ?? "#9ca3af",
+        ),
       },
     ],
   };

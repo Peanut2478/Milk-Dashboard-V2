@@ -80,18 +80,16 @@ onMounted(() => {
   loadAppointments();
 });
 </script>
-
 <template>
   <section>
     <h1>Appointments</h1>
     <div class="appointment-filters">
       <div>
-        <label for="filter-date"> Date </label>
+        <label for="filter-date">Date</label>
         <input id="filter-date" v-model="selectedDate" type="date" />
       </div>
-
       <div>
-        <label for="filter-status"> Status </label>
+        <label for="filter-status">Status</label>
         <select id="filter-status" v-model="selectedStatus">
           <option value="">All Statuses</option>
           <option value="Scheduled">Scheduled</option>
@@ -99,7 +97,6 @@ onMounted(() => {
           <option value="Cancelled">Cancelled</option>
         </select>
       </div>
-
       <button
         type="button"
         @click="
@@ -118,21 +115,14 @@ onMounted(() => {
       @appointment-updated="handleAppointmentUpdated"
       @cancel="selectedAppointment = null"
     />
-
     <p v-if="loading">Loading appointments...</p>
-    <p v-else-if="errorMessage">
-      {{ errorMessage }}
-    </p>
+    <p v-else-if="errorMessage">{{ errorMessage }}</p>
     <p v-else-if="appointments.length === 0">No appointments found.</p>
-    <p
-      v-if="
-        !loading && appointments.length > 0 && filteredAppointments.length === 0
-      "
-    >
+    <p v-else-if="filteredAppointments.length === 0">
       No appointments match these filters.
     </p>
 
-    <div v-else>
+    <div v-if="!loading && filteredAppointments.length > 0">
       <article
         v-for="appointment in filteredAppointments"
         :key="appointment.id"
@@ -148,26 +138,11 @@ onMounted(() => {
           —
           {{ appointment.staff_member.role }}
         </p>
-        <p>
-          Department:
-          {{ appointment.department?.name ?? "Not assigned" }}
-        </p>
-        <p>
-          Date:
-          {{ appointment.appointment_date }}
-        </p>
-        <p>
-          Time:
-          {{ appointment.appointment_time }}
-        </p>
-        <p>
-          Status:
-          {{ appointment.status }}
-        </p>
-        <p>
-          Reason:
-          {{ appointment.reason ?? "No reason provided" }}
-        </p>
+        <p>Department: {{ appointment.department?.name ?? "Not assigned" }}</p>
+        <p>Date: {{ appointment.appointment_date }}</p>
+        <p>Time: {{ appointment.appointment_time }}</p>
+        <p>Status: {{ appointment.status }}</p>
+        <p>Reason: {{ appointment.reason ?? "No reason provided" }}</p>
         <button @click="editAppointment(appointment)">Edit</button>
         <button @click="handleDeleteAppointment(appointment)">Delete</button>
       </article>

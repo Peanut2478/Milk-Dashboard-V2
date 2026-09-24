@@ -7,19 +7,27 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const props = defineProps<{
   appointments: Appointment[];
 }>();
+const statusColors: Record<string, string> = {
+  Scheduled: "#3b82f6",
+  Completed: "#22c55e",
+  Cancelled: "#ef4444",
+  "No Show": "#f59e0b",
+};
 const chartData = computed(() => {
   const counts: Record<string, number> = {};
   props.appointments.forEach((appointment) => {
-    const status = appointment.status;
-    counts[status] = (counts[status] ?? 0) + 1;
+    counts[appointment.status] = (counts[appointment.status] || 0) + 1;
   });
-
+  const labels = Object.keys(counts);
   return {
-    labels: Object.keys(counts),
+    labels,
     datasets: [
       {
-        label: "Appointments",
-        data: Object.values(counts),
+        data: labels.map((status) => counts[status]),
+        backgroundColor: labels.map(
+          (status) => statusColors[status] ?? "#9ca3af",
+        ),
+        borderWidth: 0,
       },
     ],
   };

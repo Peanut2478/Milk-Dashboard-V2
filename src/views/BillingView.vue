@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import type { Bill } from "../types/billing";
+import type { Payment } from "../types/payment.ts";
+import {
+  createPayment,
+  getPaymentsByBill,
+} from "../services/paymentService.ts";
 import { getBills, deleteBill } from "../services/billingService";
 import EditBillForm from "../components/billing/EditBillForm.vue";
 import AddBillForm from "../components/billing/AddBillForm.vue";
@@ -8,7 +13,11 @@ const bills = ref<Bill[]>([]);
 const loading = ref(true);
 const errorMessage = ref("");
 const selectedBill = ref<Bill | null>(null);
-
+const payingBill = ref<Bill | null>(null);
+const paymentAmount = ref(1);
+const paymentMethod = ref("");
+const paymentDate = ref(new Date().toISOString().split("T")[0]);
+const paymentHistory = ref<Payment[]>([]);
 function editBill(bill: Bill) {
   selectedBill.value = bill;
 }
@@ -84,6 +93,46 @@ const filteredBills = computed(() => {
     return matchesSearch && matchesStatus;
   });
 });
+const remainingBalance = computed(() => {
+  if (!payingBill.value) {
+    return 0;
+  }
+  return Math.max(
+    Number(payingBill.value.amount) - Number(payingBill.value.amount_paid),
+    0,
+  );
+});
+async function handlePayment() {
+  errorMessage.value = "";
+  if (!payingBill.value) return;
+  if (!payingBill.value.patient_id) {
+    errorMessage.value = "This bill does not have a patiend";
+    return;
+  }
+  if (paymentAmount.value === null || paymentAmount.value <= 0) {
+    errorMessage.value = "Enter a valid payment amount";
+  }
+  if (paymentAmount.value > remainingBalance.value) {
+    errorMessage.value = "Payment can not exceed the remaining balance";
+    return;
+  }
+  try {
+    await createPayment({
+      bill_id: payingBill.value.bill_id,
+      patient_id: payingBill.value.patient_id,
+      amount: paymentAmount.value,
+      payment_date: paymentDate.value,
+      payment_method: paymentMethod.value,
+    });
+    payingBill.value = null;
+    paymentAmount.value = 0;
+    paymentMethod.value = "Card";
+    await loadBills();
+  } catch (error) {
+    console.error(error);
+    errorMessage.value = "Error can not do payment mf";
+  }
+}
 onMounted(() => {
   loadBills();
 });
@@ -171,6 +220,61 @@ onMounted(() => {
           at
           {{ bill.appointment.appointment_time }}
         </p>
+        <button
+          v-if="
+            Number(bill.amount_paid) < Number(bill.amount) &&
+            bill.status !== 'Cancelled'
+          "
+          type="button"
+          @click="
+            payingBill = bill;
+            paymentAmount = 0;
+          "
+        >
+          Record Payment
+        </button>
+        <form v-if="payingBill" @submit.prevent="handlePayment">
+          <h2>Record Payment</h2>
+          <p>
+            Patient:
+            {{
+              payingBill.patient
+                ? `${payingBill.patient.first_name} ${payingBill.patient.last_name}`
+                : "Unknown"
+            }}
+          </p>
+          <p>Bill Total: ${{ Number(payingBill.amount).toFixed(2) }}</p>
+          <p>Already Paid: ${{ Number(payingBill.amount_paid).toFixed(2) }}</p>
+          <p>Remaining: ${{ remainingBalance.toFixed(2) }}</p>
+          <div>
+            <label>Payment Amount</label>
+            <input
+              v-model.number="paymentAmount"
+              type="number"
+              min="0.01"
+              step="0.01"
+              :max="remainingBalance"
+              required
+            />
+          </div>
+
+          <div>
+            <label>Payment Method</label>
+            <select v-model="paymentMethod">
+              <option value="Card">Card</option>
+              <option value="Cash">Cash</option>
+              <option value="Check">Check</option>
+              <option value="Insurance">Insurance</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label>Payment Date</label>
+            <input v-model="paymentDate" type="date" required />
+          </div>
+          <button type="submit">Record Payment</button>
+          <button type="button" @click="payingBill = null">Cancel</button>
+        </form>
         <button @click="editBill(bill)">Edit</button>
         <button @click="handleDeleteBill(bill)">Delete</button>
       </article>
@@ -206,5 +310,15 @@ onMounted(() => {
   gap: 0.75rem;
   margin-bottom: 1rem;
   flex-wrap: wrap;
+}
+input,
+select,
+textarea {
+  color: #1f2937;
+  background-color: white;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
 }
 </style>

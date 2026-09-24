@@ -1,6 +1,6 @@
 import { supabase } from "../lib/supabase";
 import type { Staff, UpdateStaff, NewStaff } from "../types/staff";
-
+import { FunctionsHttpError } from "@supabase/supabase-js";
 export async function getStaff(): Promise<Staff[]> {
   const { data, error } = await supabase
     .from("staff")
@@ -32,14 +32,24 @@ export async function createStaff(staff: NewStaff): Promise<Staff> {
   const { data, error } = await supabase.functions.invoke("create-staff", {
     body: staff,
   });
+
   if (error) {
+    if (error instanceof FunctionsHttpError) {
+      try {
+        const errorBody = await error.context.json();
+
+        console.error("EDGE FUNCTION RESPONSE:", errorBody);
+      } catch {
+        console.error("Could not read Edge Function response body.");
+      }
+    }
+
     console.error("Create staff function error:", error);
-    throw new Error(error.message);
+
+    throw error;
   }
-  if (data?.error) {
-    throw new Error(data.error);
-  }
-  return data.staff;
+
+  return data;
 }
 export async function deleteStaff(id: string): Promise<void> {
   const { data, error } = await supabase.functions.invoke("delete-staff", {

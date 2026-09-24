@@ -359,11 +359,18 @@ textarea {
   resize: vertical;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #6b7280;
+input,
+select,
+textarea {
+  color: #1e293b;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+}
+
+input::placeholder {
+  color: #94a3b8;
 }
 
 /* Buttons */
