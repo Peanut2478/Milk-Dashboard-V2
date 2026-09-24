@@ -69,14 +69,117 @@ The dashboard displays real-time operational information including:
 ## Project Structure
 
 ```text
-src/
-├── components/
-├── layouts/
-├── router/
-├── services/
-├── stores/
-├── types/
-├── views/
-├── App.vue
-└── main.ts
+Milk-Dashboard-V2
+├── public
+│   ├── favicon.svg
+│   └── icons.svg
+├── src
+│   ├── assets
+│   │   └── hero.png
+│   ├── components
+│   │   ├── appointments
+│   │   │   ├── AddAppointmentForm.vue
+│   │   │   └── EditAppointments.vue
+│   │   ├── billing
+│   │   │   ├── AddBillForm.vue
+│   │   │   └── EditBillForm.vue
+│   │   ├── dashboard
+│   │   │   ├── AppointmentStatusChart.vue
+│   │   │   ├── DashboardSidebar.vue
+│   │   │   ├── DashboardTopbar.vue
+│   │   │   ├── RoomStatusChart.vue
+│   │   │   └── StatCard.vue
+│   │   ├── departments
+│   │   │   ├── AddDepartmentForm.vue
+│   │   │   └── EditDepartmentForm.vue
+│   │   ├── patients
+│   │   │   ├── AddPatientForm.vue
+│   │   │   ├── EditPatientForm.vue
+│   │   │   ├── PatientCard.vue
+│   │   │   └── PatientInsurance.vue
+│   │   ├── rooms
+│   │   │   ├── AddRoomForm.vue
+│   │   │   └── EditRoomForm.vue
+│   │   ├── staff
+│   │   │   ├── AddStaffForm.vue
+│   │   │   ├── EditStaffForm.vue
+│   │   │   └── StaffCard.vue
+│   │   └── supplies
+│   │       ├── AddSupplyForm.vue
+│   │       └── EditSupplyForm.vue
+│   ├── layouts
+│   │   └── DashboardLayout.vue
+│   ├── lib
+│   │   └── supabase.ts
+│   ├── router
+│   │   └── index.ts
+│   ├── services
+│   │   ├── admissionService.ts
+│   │   ├── appointmentServices.ts
+│   │   ├── billingService.ts
+│   │   ├── departmentServices.ts
+│   │   ├── insuranceService.ts
+│   │   ├── medicationService.ts
+│   │   ├── patientServices.ts
+│   │   ├── paymentService.ts
+│   │   ├── payrollService.ts
+│   │   ├── perscriptionService.ts
+│   │   ├── roomService.ts
+│   │   ├── staffServices.ts
+│   │   ├── supplyService.ts
+│   │   └── supplyUsageServices.ts
+│   ├── stores
+│   │   └── auth.ts
+│   ├── types
+│   │   ├── admissions.ts
+│   │   ├── appointments.ts
+│   │   ├── billing.ts
+│   │   ├── department.ts
+│   │   ├── insurance.ts
+│   │   ├── medications.ts
+│   │   ├── patient.ts
+│   │   ├── payment.ts
+│   │   ├── payroll.ts
+│   │   ├── perscriptions.ts
+│   │   ├── rooms.ts
+│   │   ├── staff.ts
+│   │   ├── supplies.ts
+│   │   └── supplyUsage.ts
+│   ├── views
+│   │   ├── auth
+│   │   │   ├── LoginView.vue
+│   │   │   └── SignUpView.vue
+│   │   ├── AdmissionsView.vue
+│   │   ├── AppointmentsView.vue
+│   │   ├── BillingView.vue
+│   │   ├── DashboardView.vue
+│   │   ├── DepartmentView.vue
+│   │   ├── MedicationsView.vue
+│   │   ├── PatientsView.vue
+│   │   ├── PayrollView.vue
+│   │   ├── PerscriptionsView.vue
+│   │   ├── RoomsView.vue
+│   │   ├── StaffView.vue
+│   │   └── SuppliesView.vue
+│   ├── App.vue
+│   ├── main.ts
+│   └── style.css
+├── supabase
+│   ├── .temp
+│   │   ├── cli-latest
+│   │   └── linked-project.json
+│   └── functions
+│       └── create-staff
+│           └── index.ts
+├── .env
+├── .gitignore
+├── README.md
+├── index.html
+├── package-lock.json
+├── package.json
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+
 ```
