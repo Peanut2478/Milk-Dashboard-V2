@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import type { Bill } from "../types/billing";
-import type { Payment } from "../types/payment.ts";
-import {
-  createPayment,
-  getPaymentsByBill,
-} from "../services/paymentService.ts";
+import { createPayment } from "../services/paymentService.ts";
 import { getBills, deleteBill } from "../services/billingService";
 import EditBillForm from "../components/billing/EditBillForm.vue";
 import AddBillForm from "../components/billing/AddBillForm.vue";
@@ -17,7 +13,6 @@ const payingBill = ref<Bill | null>(null);
 const paymentAmount = ref(1);
 const paymentMethod = ref("");
 const paymentDate = ref(new Date().toISOString().split("T")[0]);
-const paymentHistory = ref<Payment[]>([]);
 function editBill(bill: Bill) {
   selectedBill.value = bill;
 }
