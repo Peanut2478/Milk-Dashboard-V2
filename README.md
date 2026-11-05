@@ -1,4 +1,4 @@
-# Milk Administration
+# Milk Dashboard
 
 A full-stack hospital administration dashboard built with Vue 3, TypeScript, Supabase, and PostgreSQL.
 
