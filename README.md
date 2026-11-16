@@ -6,13 +6,11 @@ A full-stack hospital management application designed to centralize administrati
 
 Built with Vue 3 and TypeScript on the frontend and Supabase PostgreSQL on the backend, the application features relational data management, role-based authorization, automated database workflows, and interactive analytics.
 
-### Live Application & Demo
+## Live Demo
 
-**[Live Application](https://milk-dashboard-v2.vercel.app)**
+**[Launch Application](https://milk-dashboard-v2.vercel.app)**
 
-**Demo Video:** [Add video link]
-
-> This project uses fictional hospital records for demonstration purposes.
+**[Watch Demo Video](https://youtu.be/LSgzfcv4D0k)**
 
 ## Key Features
 
