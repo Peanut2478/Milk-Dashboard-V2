@@ -13,7 +13,7 @@ async function handleLogout() {
 <template>
   <header class="topbar">
     <div>
-      <h1>Hospital Management System</h1>
+      <h1>Milk Administration</h1>
       <p v-if="auth.user">
         {{ auth.user.email }}
       </p>

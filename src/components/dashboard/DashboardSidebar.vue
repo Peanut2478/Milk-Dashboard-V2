@@ -44,7 +44,7 @@ const navigationItems = [
 
 <template>
   <aside class="sidebar">
-    <h2>Hospital Admin</h2>
+    <h2>Milk Admin</h2>
 
     <nav>
       <RouterLink
