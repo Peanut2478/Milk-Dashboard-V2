@@ -1,188 +1,193 @@
-# Milk Dashboard
+# Milk Dashboard V2
 
-A full-stack hospital administration dashboard built with Vue 3, TypeScript, Supabase, and PostgreSQL.
+**Full-Stack Hospital Administration System | Vue 3 · TypeScript · Supabase · PostgreSQL**
 
-The application provides a centralized interface for managing hospital operations including patients, staff, departments, appointments, rooms, supplies, billing, and payroll.
+A full-stack hospital management application designed to centralize administrative operations, streamline data management, and provide real-time visibility into hospital activity.
 
-## Features
+Built with Vue 3 and TypeScript on the frontend and Supabase PostgreSQL on the backend, the application features relational data management, role-based authorization, automated database workflows, and interactive analytics.
 
-- User authentication with Supabase Auth
-- Role-based access control using PostgreSQL Row Level Security
-- Patient management
-- Staff management with secure account creation
-- Department management
-- Appointment scheduling
-- Room management and status tracking
-- Supply inventory and low-stock monitoring
-- Billing and payment tracking
-- Payroll processing
-- Dashboard statistics and charts
-- Search and filtering across major sections
-- Responsive administrative interface
-- Patient insurance management
-- Hospital admissions and discharge tracking
-- Medication inventory management
-- Prescription management
-- Supply usage tracking with automatic inventory updates
-- Payment processing with automatic billing balance updates
+### Live Application & Demo
 
-## Tech Stack
+**[Live Application](https://milk-dashboard-v2.vercel.app)**
 
-### Frontend
+**Demo Video:** [Add video link]
 
-- Vue 3
-- TypeScript
-- Vite
-- Vue Router
-- Pinia
-- Chart.js
-- vue-chartjs
+> This project uses fictional hospital records for demonstration purposes.
 
-### Backend
+## Key Features
 
-- Supabase
-- PostgreSQL
-- Supabase Authentication
-- Row Level Security (RLS)
-- PostgreSQL Functions
-- Supabase Edge Functions
+### Hospital Operations Management
+- Manage patient profiles, staff records, and hospital departments.
+- Schedule and track appointments across departments.
+- Monitor room availability, occupancy, and maintenance status.
+- Manage patient admissions, discharges, and insurance information.
+- Track medication inventory, prescriptions, and medical supplies.
 
-## Security
+### Billing & Financial Management
+- Create and manage patient billing records.
+- Record payments and track outstanding balances.
+- Automatically update billing balances using PostgreSQL database functions and triggers.
+- Manage staff payroll records.
 
-The application uses Supabase Authentication and PostgreSQL Row Level Security to restrict database access based on staff roles.
+### Authentication & Role-Based Access Control
+- Authenticate users through Supabase Auth.
+- Enforce database-level permissions using PostgreSQL Row Level Security (RLS).
+- Support administrative and department-level staff accounts.
+- Maintain staff records independently of authentication accounts.
+- Restrict privileged staff-management operations based on user roles.
+- Handle privileged authentication operations through Supabase Edge Functions.
 
-Privileged operations such as creating and deleting staff authentication accounts are handled through Supabase Edge Functions rather than exposing administrative credentials in the frontend.
+### Dashboard Analytics
+- Monitor patient and staff counts.
+- Track daily appointments and room availability.
+- Identify low-stock supplies.
+- Monitor outstanding billing balances.
+- Visualize appointment and room status distributions using Chart.js.
 
-## Dashboard
+## Technology Stack
 
-The dashboard displays real-time operational information including:
+| Layer | Technologies |
+|---|---|
+| Frontend | Vue 3, TypeScript, Vite |
+| Routing & State | Vue Router, Pinia |
+| Data Visualization | Chart.js, vue-chartjs |
+| Backend | Supabase, PostgreSQL |
+| Authentication | Supabase Auth |
+| Authorization | PostgreSQL Row Level Security |
+| Server-Side Logic | PostgreSQL Functions, Triggers, Supabase Edge Functions |
+| Deployment | Vercel |
 
-- Total patients
-- Total staff
-- Today's appointments
-- Available rooms
-- Low-stock supplies
-- Outstanding billing balance
-- Appointment status distribution
-- Room status distribution
-  
-## Live Demo
-https://milk-dashboard-v2.vercel.app
+## System Architecture
+
+The application follows a component-based architecture with a separation between frontend views, reusable UI components, data-access services, and backend operations.
+
+**Frontend**
+- Vue components implement forms, dashboards, charts, and administrative interfaces.
+- TypeScript interfaces define application data models.
+- Vue Router manages navigation.
+- Pinia manages authentication state.
+- Service modules organize database queries and application operations.
+
+**Backend**
+- Supabase PostgreSQL stores relational hospital data.
+- Foreign keys maintain relationships between patients, appointments, departments, staff, billing, and other records.
+- Row Level Security enforces database access policies.
+- PostgreSQL functions and triggers automate selected workflows.
+- Supabase Edge Functions handle privileged server-side operations.
+
+**Data Flow**
+
+```text
+Vue 3 + TypeScript Frontend
+          |
+          v
+Service Layer + Pinia
+          |
+          v
+Supabase Client
+          |
+          +---- Supabase Auth
+          |
+          +---- PostgreSQL Database
+          |        |
+          |        +---- Row Level Security
+          |        +---- Relational Data
+          |        +---- Functions & Triggers
+          |
+          +---- Supabase Edge Functions
+```
+
+## Technical Highlights
+
+### Hybrid Staff Authentication
+
+Implemented a staff-management model that separates employee records from authentication accounts.
+
+This allows the application to maintain complete staff and department records without requiring every employee to have login credentials.
+
+Authorized staff accounts are linked to employee profiles, allowing role-based access to application functionality.
+
+### Database-Level Authorization
+
+Implemented PostgreSQL Row Level Security policies to restrict access based on authenticated staff roles.
+
+Administrative operations are protected by database-level authorization rather than relying exclusively on frontend visibility controls.
+
+### Automated Billing Updates
+
+Implemented payment tracking integrated with hospital billing records.
+
+Database-side logic supports automatic updates to recorded payment balances, reducing the need for manual synchronization between billing and payment data.
+
+### Inventory Monitoring
+
+Implemented supply inventory tracking, reorder-level monitoring, and supply usage workflows to support hospital resource management.
 
 ## Project Structure
 
 ```text
-Milk-Dashboard-V2
-├── public
-│   ├── favicon.svg
-│   └── icons.svg
-├── src
-│   ├── assets
-│   │   └── hero.png
-│   ├── components
-│   │   ├── appointments
-│   │   │   ├── AddAppointmentForm.vue
-│   │   │   └── EditAppointments.vue
-│   │   ├── billing
-│   │   │   ├── AddBillForm.vue
-│   │   │   └── EditBillForm.vue
-│   │   ├── dashboard
-│   │   │   ├── AppointmentStatusChart.vue
-│   │   │   ├── DashboardSidebar.vue
-│   │   │   ├── DashboardTopbar.vue
-│   │   │   ├── RoomStatusChart.vue
-│   │   │   └── StatCard.vue
-│   │   ├── departments
-│   │   │   ├── AddDepartmentForm.vue
-│   │   │   └── EditDepartmentForm.vue
-│   │   ├── patients
-│   │   │   ├── AddPatientForm.vue
-│   │   │   ├── EditPatientForm.vue
-│   │   │   ├── PatientCard.vue
-│   │   │   └── PatientInsurance.vue
-│   │   ├── rooms
-│   │   │   ├── AddRoomForm.vue
-│   │   │   └── EditRoomForm.vue
-│   │   ├── staff
-│   │   │   ├── AddStaffForm.vue
-│   │   │   ├── EditStaffForm.vue
-│   │   │   └── StaffCard.vue
-│   │   └── supplies
-│   │       ├── AddSupplyForm.vue
-│   │       └── EditSupplyForm.vue
-│   ├── layouts
-│   │   └── DashboardLayout.vue
-│   ├── lib
-│   │   └── supabase.ts
-│   ├── router
-│   │   └── index.ts
-│   ├── services
-│   │   ├── admissionService.ts
-│   │   ├── appointmentServices.ts
-│   │   ├── billingService.ts
-│   │   ├── departmentServices.ts
-│   │   ├── insuranceService.ts
-│   │   ├── medicationService.ts
-│   │   ├── patientServices.ts
-│   │   ├── paymentService.ts
-│   │   ├── payrollService.ts
-│   │   ├── perscriptionService.ts
-│   │   ├── roomService.ts
-│   │   ├── staffServices.ts
-│   │   ├── supplyService.ts
-│   │   └── supplyUsageServices.ts
-│   ├── stores
-│   │   └── auth.ts
-│   ├── types
-│   │   ├── admissions.ts
-│   │   ├── appointments.ts
-│   │   ├── billing.ts
-│   │   ├── department.ts
-│   │   ├── insurance.ts
-│   │   ├── medications.ts
-│   │   ├── patient.ts
-│   │   ├── payment.ts
-│   │   ├── payroll.ts
-│   │   ├── perscriptions.ts
-│   │   ├── rooms.ts
-│   │   ├── staff.ts
-│   │   ├── supplies.ts
-│   │   └── supplyUsage.ts
-│   ├── views
-│   │   ├── auth
-│   │   │   ├── LoginView.vue
-│   │   │   └── SignUpView.vue
-│   │   ├── AdmissionsView.vue
-│   │   ├── AppointmentsView.vue
-│   │   ├── BillingView.vue
-│   │   ├── DashboardView.vue
-│   │   ├── DepartmentView.vue
-│   │   ├── MedicationsView.vue
-│   │   ├── PatientsView.vue
-│   │   ├── PayrollView.vue
-│   │   ├── PerscriptionsView.vue
-│   │   ├── RoomsView.vue
-│   │   ├── StaffView.vue
-│   │   └── SuppliesView.vue
-│   ├── App.vue
-│   ├── main.ts
-│   └── style.css
-├── supabase
-│   ├── .temp
-│   │   ├── cli-latest
-│   │   └── linked-project.json
-│   └── functions
-│       └── create-staff
-│           └── index.ts
-├── .env
-├── .gitignore
-├── README.md
-├── index.html
-├── package-lock.json
-├── package.json
-├── tsconfig.app.json
-├── tsconfig.json
-├── tsconfig.node.json
-└── vite.config.ts
+src/
+├── components/    # Reusable forms, cards, and charts
+├── layouts/       # Shared dashboard layout
+├── lib/           # Supabase client configuration
+├── router/        # Application routing
+├── services/      # Database access and operations
+├── stores/        # Authentication state
+├── types/         # TypeScript data models
+└── views/         # Application pages
 
+supabase/
+└── functions/     # Server-side Edge Functions
 ```
+
+## Running Locally
+
+**1. Clone the repository**
+
+```bash
+git clone <repository-url>
+cd Milk-Dashboard-V2
+```
+
+**2. Install dependencies**
+
+```bash
+npm install
+```
+
+**3. Configure environment variables**
+
+Create a `.env` file in the project root:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_KEY=your_supabase_publishable_or_anon_key
+```
+
+Use only a Supabase publishable or legacy anon key in the frontend. Never expose service-role or secret keys.
+
+**4. Start the development server**
+
+```bash
+npm run dev
+```
+
+**5. Open the local application**
+
+```text
+http://localhost:5173
+```
+
+A configured Supabase backend and appropriate authentication permissions are required to use the application's database-backed features.
+
+## Deployment
+
+The frontend is deployed on Vercel and connects to a Supabase-hosted PostgreSQL database.
+
+**[View Live Application](https://milk-dashboard-v2.vercel.app)**
+
+## Project Status
+
+Deployed full-stack application with hospital administration workflows, relational data management, authentication, role-based authorization, and interactive dashboard analytics.
+
+*Built as a software engineering portfolio project using fictional hospital data.*
