@@ -1,4 +1,4 @@
-# Milk Administration
+# Milk Dashboard
 
 A full-stack hospital administration dashboard built with Vue 3, TypeScript, Supabase, and PostgreSQL.
 
@@ -65,6 +65,9 @@ The dashboard displays real-time operational information including:
 - Outstanding billing balance
 - Appointment status distribution
 - Room status distribution
+  
+## Live Demo
+https://milk-dashboard-v2.vercel.app
 
 ## Project Structure
 
